@@ -1408,9 +1408,72 @@
 								</div>
 							{/if}
 
-							<div class="pl-[1px] flex items-center gap-2 w-full">
+								<div class="pl-1 flex items-center gap-2 w-full">
 
-							<div class="flex-1 min-w-0 px-2.5">
+							<!-- LEFT: InputMenu (plus) -->
+							<div class="flex items-center">
+								<InputMenu
+									bind:files
+									selectedModels={atSelectedModel ? [atSelectedModel.id] : selectedModels}
+									{fileUploadCapableModels}
+									{screenCaptureHandler}
+									{inputFilesHandler}
+									uploadFilesHandler={() => {
+										filesInputElement.click();
+									}}
+									uploadGoogleDriveHandler={async () => {
+										try {
+											const fileData = await createPicker();
+											if (fileData) {
+												const file = new File([fileData.blob], fileData.name, {
+													type: fileData.blob.type
+												});
+												await uploadFileHandler(file);
+											} else {
+												console.log('No file was selected from Google Drive');
+											}
+										} catch (error) {
+											console.error('Google Drive Error:', error);
+											toast.error(
+												$i18n.t('Error accessing Google Drive: {{error}}', {
+													error: error.message
+												})
+											);
+										}
+									}}
+									uploadOneDriveHandler={async (authorityType) => {
+										try {
+											const fileData = await pickAndDownloadFile(authorityType);
+											if (fileData) {
+												const file = new File([fileData.blob], fileData.name, {
+													type: fileData.blob.type || 'application/octet-stream'
+												});
+												await uploadFileHandler(file);
+											} else {
+												console.log('No file was selected from OneDrive');
+											}
+										} catch (error) {
+											console.error('OneDrive Error:', error);
+										}
+									}}
+									{onUpload}
+									onClose={async () => {
+										await tick();
+
+										const chatInput = document.getElementById('chat-input');
+										chatInput?.focus();
+									}}
+								>
+									<div
+										id="input-menu-button"
+										class="bg-transparent hover:bg-gray-100 text-gray-700 dark:text-white dark:hover:bg-gray-800 rounded-full size-8 flex justify-center items-center outline-hidden focus:outline-hidden"
+									>
+										<PlusAlt className="size-5.5" />
+									</div>
+								</InputMenu>
+							</div>
+
+							<div class="flex-1 min-w-0">
 							<div
 								class="scrollbar-hidden rtl:text-right ltr:text-left bg-transparent dark:text-gray-100 outline-hidden w-full pb-1 px-1 resize-none h-fit max-h-96 overflow-auto {files.length ===
 								0
@@ -1607,69 +1670,9 @@
 							</div>
 							<!-- end flex-1 input -->
 
-							<div class="flex items-center gap-1 shrink-0 py-1 pr-1" dir="ltr">
-								<div class="self-end flex items-center gap-1 flex-1 max-w-[80%]">
-									<InputMenu
-										bind:files
-										selectedModels={atSelectedModel ? [atSelectedModel.id] : selectedModels}
-										{fileUploadCapableModels}
-										{screenCaptureHandler}
-										{inputFilesHandler}
-										uploadFilesHandler={() => {
-											filesInputElement.click();
-										}}
-										uploadGoogleDriveHandler={async () => {
-											try {
-												const fileData = await createPicker();
-												if (fileData) {
-													const file = new File([fileData.blob], fileData.name, {
-														type: fileData.blob.type
-													});
-													await uploadFileHandler(file);
-												} else {
-													console.log('No file was selected from Google Drive');
-												}
-											} catch (error) {
-												console.error('Google Drive Error:', error);
-												toast.error(
-													$i18n.t('Error accessing Google Drive: {{error}}', {
-														error: error.message
-													})
-												);
-											}
-										}}
-										uploadOneDriveHandler={async (authorityType) => {
-											try {
-												const fileData = await pickAndDownloadFile(authorityType);
-												if (fileData) {
-													const file = new File([fileData.blob], fileData.name, {
-														type: fileData.blob.type || 'application/octet-stream'
-													});
-													await uploadFileHandler(file);
-												} else {
-													console.log('No file was selected from OneDrive');
-												}
-											} catch (error) {
-												console.error('OneDrive Error:', error);
-											}
-										}}
-										{onUpload}
-										onClose={async () => {
-											await tick();
-
-											const chatInput = document.getElementById('chat-input');
-											chatInput?.focus();
-										}}
-									>
-										<div
-											id="input-menu-button"
-											class="bg-transparent hover:bg-gray-100 text-gray-700 dark:text-white dark:hover:bg-gray-800 rounded-full size-8 flex justify-center items-center outline-hidden focus:outline-hidden"
-										>
-											<PlusAlt className="size-5.5" />
-										</div>
-									</InputMenu>
-
-									{#if showWebSearchButton || showImageGenerationButton || showCodeInterpreterButton || showToolsButton || (toggleFilters && toggleFilters.length > 0)}
+								<div class="flex items-center gap-1 shrink-0 py-1 pr-1" dir="ltr">
+									<div class="flex items-center gap-1 flex-1">
+										{#if showWebSearchButton || showImageGenerationButton || showCodeInterpreterButton || showToolsButton || (toggleFilters && toggleFilters.length > 0)}
 										<div
 											class="flex self-center w-[1px] h-4 mx-1 bg-gray-200/50 dark:bg-gray-800/50"
 										/>
@@ -1936,60 +1939,10 @@
 												($_user?.permissions?.features?.direct_tool_servers ?? true)}
 											{#if terminalCapableModels.length > 0 && (($terminalServers ?? []).some((t) => t.id) || (hasDirectToolServerAccess && (($terminalServers ?? []).some((t) => !t.id) || ($settings?.terminalServers ?? []).some((s) => s.url))))}
 												<TerminalMenu bind:show={showTerminalMenu} />
+												{/if}
 											{/if}
-
-											{#if $_user?.role === 'admin' || ($_user?.permissions?.chat?.stt ?? true)}
-												<!-- {$i18n.t('Record voice')} -->
-												<Tooltip content={$i18n.t('Dictate')}>
-													<button
-														id="voice-input-button"
-														class=" text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 transition rounded-full p-1.5 self-center mr-0.5"
-														type="button"
-														on:click={async () => {
-															try {
-																let stream = await navigator.mediaDevices
-																	.getUserMedia({ audio: true })
-																	.catch(function (err) {
-																		toast.error(
-																			$i18n.t(
-																				`Permission denied when accessing microphone: {{error}}`,
-																				{
-																					error: err
-																				}
-																			)
-																		);
-																		return null;
-																	});
-
-																if (stream) {
-																	recording = true;
-																	const tracks = stream.getTracks();
-																	tracks.forEach((track) => track.stop());
-																}
-																stream = null;
-															} catch {
-																toast.error($i18n.t('Permission denied when accessing microphone'));
-															}
-														}}
-														aria-label="Voice Input"
-													>
-														<svg
-															xmlns="http://www.w3.org/2000/svg"
-															viewBox="0 0 20 20"
-															fill="currentColor"
-															class="size-5 translate-y-[0.5px]"
-														>
-															<path d="M7 4a3 3 0 016 0v6a3 3 0 11-6 0V4z" />
-															<path
-																d="M5.5 9.643a.75.75 0 00-1.5 0V10c0 3.06 2.29 5.585 5.25 5.954V17.5h-1.5a.75.75 0 000 1.5h4.5a.75.75 0 000-1.5h-1.5v-1.546A6.001 6.001 0 0016 10v-.357a.75.75 0 00-1.5 0V10a4.5 4.5 0 01-9 0v-.357z"
-															/>
-														</svg>
-													</button>
-												</Tooltip>
-											{/if}
-										{/if}
-
-										{#if prompt === '' && files.length === 0 && ($_user?.role === 'admin' || ($_user?.permissions?.chat?.call ?? true))}
+	
+											{#if prompt === '' && files.length === 0 && ($_user?.role === 'admin' || ($_user?.permissions?.chat?.call ?? true))}
 											<div class=" flex items-center">
 												<!-- {$i18n.t('Call')} -->
 												<Tooltip content={$i18n.t('Voice mode')}>
