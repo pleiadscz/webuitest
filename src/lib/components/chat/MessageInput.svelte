@@ -1408,16 +1408,18 @@
 								</div>
 							{/if}
 
-							<div class="px-2.5">
-								<div
-									class="scrollbar-hidden rtl:text-right ltr:text-left bg-transparent dark:text-gray-100 outline-hidden w-full pb-1 px-1 resize-none h-fit max-h-96 overflow-auto {files.length ===
-									0
-										? atSelectedModel !== undefined
-											? 'pt-1.5'
-											: 'pt-2.5'
-										: ''}"
-									id="chat-input-container"
-								>
+							<div class="pl-[1px] flex items-center gap-2 w-full">
+
+							<div class="flex-1 min-w-0 px-2.5">
+							<div
+								class="scrollbar-hidden rtl:text-right ltr:text-left bg-transparent dark:text-gray-100 outline-hidden w-full pb-1 px-1 resize-none h-fit max-h-96 overflow-auto {files.length ===
+								0
+									? atSelectedModel !== undefined
+										? 'pt-1.5'
+										: 'pt-2.5'
+									: ''}"
+								id="chat-input-container"
+							>
 									{#if prompt.split('\n').length > 2}
 										<div class="fixed top-0 right-0 z-20">
 											<div class="mt-2.5 mr-3">
@@ -1603,9 +1605,10 @@
 									{/if}
 								</div>
 							</div>
+							<!-- end flex-1 input -->
 
-							<div class=" flex justify-between mt-0.5 mb-2.5 mx-0.5 max-w-full overflow-hidden" dir="ltr">
-								<div class="ml-1 self-end flex items-center flex-1 max-w-[80%]">
+							<div class="flex items-center gap-1 shrink-0 py-1 pr-1" dir="ltr">
+								<div class="self-end flex items-center gap-1 flex-1 max-w-[80%]">
 									<InputMenu
 										bind:files
 										selectedModels={atSelectedModel ? [atSelectedModel.id] : selectedModels}
@@ -1894,7 +1897,7 @@
 									</div>
 								</div>
 
-								<div class="self-end flex space-x-1 mr-1 shrink-0 gap-[0.5px]">
+								<div class="self-end flex space-x-1 shrink-0 gap-[0.5px]">
 									{#if isActive && prompt === '' && files.length === 0}
 										<div class=" flex items-center">
 											<Tooltip content={$i18n.t('Stop')}>
@@ -2087,6 +2090,9 @@
 									{/if}
 								</div>
 							</div>
+							<!-- end flex items-center gap-1 shrink-0 (right buttons) -->
+							</div>
+							<!-- end pl-[1px] flex items-center gap-2 pill row -->
 						</div>
 
 						{#if $config?.license_metadata?.input_footer}
