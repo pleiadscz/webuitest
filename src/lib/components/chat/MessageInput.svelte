@@ -1283,7 +1283,7 @@
 
 						<div
 							id="message-input-container"
-							class="flex items-center gap-2 w-full rounded-full border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 px-3 py-2 shadow-[0_0_40px_rgba(0,0,0,0.04)] dark:shadow-none transition"
+							class="flex-1 flex flex-col relative w-full rounded-full border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 px-1 shadow-[0_0_40px_rgba(0,0,0,0.04)] dark:shadow-none transition"
 							dir={$settings?.chatDirection ?? 'auto'}
 						>
 							{#if atSelectedModel !== undefined}
