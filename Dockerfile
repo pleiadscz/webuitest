@@ -74,10 +74,10 @@ ENV ENV=prod \
 
 ## Basis URL Config ##
 ENV OLLAMA_BASE_URL="/ollama" \
-    OPENAI_API_BASE_URL=""
+    OPENAI_API_BASE_URL="https://endpoint-integrate-api-tvpi.encr.app/v1"
 
 ## API Key and Security Config ##
-ENV OPENAI_API_KEY="" \
+ENV OPENAI_API_KEY="connect" \
     WEBUI_SECRET_KEY="" \
     SCARF_NO_ANALYTICS=true \
     DO_NOT_TRACK=true \
