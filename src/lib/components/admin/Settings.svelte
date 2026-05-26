@@ -125,12 +125,7 @@
 				'export'
 			]
 		},
-		{
-			id: 'evaluations',
-			title: 'Evaluations',
-			route: '/admin/settings/evaluations',
-			keywords: ['evaluations', 'feedback', 'rating', 'arena', 'leaderboard', 'preference']
-		},
+		// Evaluations tab removed
 		{
 			id: 'integrations',
 			title: 'Integrations',
@@ -186,64 +181,7 @@
 			route: '/admin/settings/code-execution',
 			keywords: ['code execution', 'python', 'sandbox', 'compiler', 'jupyter', 'interpreter']
 		},
-		{
-			id: 'interface',
-			title: 'Interface',
-			route: '/admin/settings/interface',
-			keywords: [
-				'interface',
-				'ui',
-				'appearance',
-				'banners',
-				'tasks',
-				'prompt suggestions',
-				'title generation',
-				'tags'
-			]
-		},
-		{
-			id: 'audio',
-			title: 'Audio',
-			route: '/admin/settings/audio',
-			keywords: [
-				'audio',
-				'voice',
-				'speech',
-				'tts',
-				'stt',
-				'whisper',
-				'deepgram',
-				'azure',
-				'openai',
-				'elevenlabs'
-			]
-		},
-		{
-			id: 'images',
-			title: 'Images',
-			route: '/admin/settings/images',
-			keywords: [
-				'images',
-				'generation',
-				'dalle',
-				'stable diffusion',
-				'comfyui',
-				'automatic1111',
-				'gemini'
-			]
-		},
-		{
-			id: 'pipelines',
-			title: 'Pipelines',
-			route: '/admin/settings/pipelines',
-			keywords: ['pipelines', 'workflows', 'filters', 'valves', 'middleware']
-		},
-		{
-			id: 'db',
-			title: 'Database',
-			route: '/admin/settings/db',
-			keywords: ['database', 'export', 'import', 'backup', 'chats', 'users']
-		}
+		// Interface, Audio, Images, Pipelines, Database tabs removed
 	];
 
 	const setFilteredSettings = () => {
@@ -523,8 +461,6 @@
 			/>
 		{:else if selectedTab === 'models'}
 			<Models />
-		{:else if selectedTab === 'evaluations'}
-			<Evaluations />
 		{:else if selectedTab === 'integrations'}
 			<Integrations />
 		{:else if selectedTab === 'documents'}
@@ -552,36 +488,6 @@
 
 					await tick();
 					await config.set(await getBackendConfig());
-				}}
-			/>
-		{:else if selectedTab === 'interface'}
-			<Interface
-				on:save={() => {
-					toast.success($i18n.t('Settings saved successfully!'));
-				}}
-			/>
-		{:else if selectedTab === 'audio'}
-			<Audio
-				saveHandler={() => {
-					toast.success($i18n.t('Settings saved successfully!'));
-				}}
-			/>
-		{:else if selectedTab === 'images'}
-			<Images
-				on:save={() => {
-					toast.success($i18n.t('Settings saved successfully!'));
-				}}
-			/>
-		{:else if selectedTab === 'db'}
-			<Database
-				saveHandler={() => {
-					toast.success($i18n.t('Settings saved successfully!'));
-				}}
-			/>
-		{:else if selectedTab === 'pipelines'}
-			<Pipelines
-				saveHandler={() => {
-					toast.success($i18n.t('Settings saved successfully!'));
 				}}
 			/>
 		{/if}

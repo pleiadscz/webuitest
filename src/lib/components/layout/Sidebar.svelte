@@ -74,6 +74,7 @@
 	import Code from '../icons/Code.svelte';
 	import { slide } from 'svelte/transition';
 	import HotkeyHint from '../common/HotkeyHint.svelte';
+	import UserAvatar from '../common/UserAvatar.svelte';
 
 	const BREAKPOINT = 768;
 	const DEFAULT_PINNED_ITEMS = ['notes', 'workspace'];
@@ -951,33 +952,28 @@
 							<div
 								class=" cursor-pointer flex rounded-xl hover:bg-gray-100 dark:hover:bg-gray-850 transition group"
 							>
-								<div class="self-center relative">
-									<img
-										src={`${WEBUI_API_BASE_URL}/users/${$user?.id}/profile/image`}
-										class=" size-7 object-cover rounded-full"
-										alt={$i18n.t('Open User Profile Menu')}
-										aria-label={$i18n.t('Open User Profile Menu')}
-									/>
+							<div class="self-center relative">
+								<UserAvatar name={$user?.name ?? ''} className="size-7" />
 
-									{#if $config?.features?.enable_user_status}
-										<div class="absolute -bottom-0.5 -right-0.5">
-											<span class="relative flex size-2.5">
-												<span
-													class="relative inline-flex size-2.5 rounded-full {true
-														? 'bg-green-500'
-														: 'bg-gray-300 dark:bg-gray-700'} border-2 border-white dark:border-gray-900"
-												></span>
-											</span>
-										</div>
-									{/if}
-								</div>
+								{#if $config?.features?.enable_user_status}
+									<div class="absolute -bottom-0.5 -right-0.5">
+										<span class="relative flex size-2.5">
+											<span
+												class="relative inline-flex size-2.5 rounded-full {true
+													? 'bg-green-500'
+													: 'bg-gray-300 dark:bg-gray-700'} border-2 border-white dark:border-gray-900"
+											></span>
+										</span>
+									</div>
+								{/if}
 							</div>
-						</UserMenu>
-					{/if}
-				</div>
+						</div>
+					</UserMenu>
+				{/if}
 			</div>
 		</div>
 	</div>
+</div>
 {/if}
 
 <!-- {$i18n.t('New Folder')} -->
@@ -1611,26 +1607,21 @@
 							<div
 								class=" flex items-center rounded-2xl py-2 px-1.5 w-full hover:bg-gray-100/50 dark:hover:bg-gray-900/50 transition"
 							>
-								<div class=" self-center mr-3 relative">
-									<img
-										src={`${WEBUI_API_BASE_URL}/users/${$user?.id}/profile/image`}
-										class=" size-7 object-cover rounded-full"
-										alt={$i18n.t('Open User Profile Menu')}
-										aria-label={$i18n.t('Open User Profile Menu')}
-									/>
+						<div class=" self-center mr-3 relative">
+							<UserAvatar name={$user?.name ?? ''} className="size-7" />
 
-									{#if $config?.features?.enable_user_status}
-										<div class="absolute -bottom-0.5 -right-0.5">
-											<span class="relative flex size-2.5">
-												<span
-													class="relative inline-flex size-2.5 rounded-full {true
-														? 'bg-green-500'
-														: 'bg-gray-300 dark:bg-gray-700'} border-2 border-white dark:border-gray-900"
-												></span>
-											</span>
-										</div>
-									{/if}
+							{#if $config?.features?.enable_user_status}
+								<div class="absolute -bottom-0.5 -right-0.5">
+									<span class="relative flex size-2.5">
+										<span
+											class="relative inline-flex size-2.5 rounded-full {true
+												? 'bg-green-500'
+												: 'bg-gray-300 dark:bg-gray-700'} border-2 border-white dark:border-gray-900"
+										></span>
+									</span>
 								</div>
+							{/if}
+						</div>
 								<div class=" self-center font-medium">{$user?.name}</div>
 							</div>
 						</UserMenu>

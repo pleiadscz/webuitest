@@ -14,6 +14,11 @@
 
 	export let showSetDefault = true;
 
+	// Enforce single model: always keep only the first element
+	$: if (selectedModels.length > 1) {
+		selectedModels = [selectedModels[0]];
+	}
+
 	const saveDefaultModel = async () => {
 		const hasEmptyModel = selectedModels.filter((it) => it === '');
 		if (hasEmptyModel.length) {
@@ -51,12 +56,13 @@
 </script>
 
 <div class="flex flex-col w-full items-start">
-	{#each selectedModels as selectedModel, selectedModelIdx}
+	<!-- Only the first (and only) model selector is shown; multi-model button removed -->
+	{#if selectedModels.length > 0}
 		<div class="flex w-full max-w-fit">
 			<div class="overflow-hidden w-full">
 				<div class="max-w-full {($settings?.highContrastMode ?? false) ? 'm-1' : 'mr-1'}">
 					<Selector
-						id={`${selectedModelIdx}`}
+						id="0"
 						placeholder={$i18n.t('Select a model')}
 						items={$models.map((model) => ({
 							value: model.id,
@@ -64,68 +70,12 @@
 							model: model
 						}))}
 						{pinModelHandler}
-						bind:value={selectedModel}
+						bind:value={selectedModels[0]}
 					/>
 				</div>
 			</div>
-
-			{#if $user?.role === 'admin' || ($user?.permissions?.chat?.multiple_models ?? true)}
-				{#if selectedModelIdx === 0}
-					<div
-						class="  self-center mx-1 disabled:text-gray-600 disabled:hover:text-gray-600 -translate-y-[0.5px]"
-					>
-						<Tooltip content={$i18n.t('Add Model')}>
-							<button
-								class=" "
-								{disabled}
-								on:click={() => {
-									selectedModels = [...selectedModels, ''];
-								}}
-								aria-label="Add Model"
-							>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke-width="2"
-									stroke="currentColor"
-									class="size-3.5"
-								>
-									<path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
-								</svg>
-							</button>
-						</Tooltip>
-					</div>
-				{:else}
-					<div
-						class="  self-center mx-1 disabled:text-gray-600 disabled:hover:text-gray-600 -translate-y-[0.5px]"
-					>
-						<Tooltip content={$i18n.t('Remove Model')}>
-							<button
-								{disabled}
-								on:click={() => {
-									selectedModels.splice(selectedModelIdx, 1);
-									selectedModels = selectedModels;
-								}}
-								aria-label="Remove Model"
-							>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke-width="2"
-									stroke="currentColor"
-									class="size-3"
-								>
-									<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" />
-								</svg>
-							</button>
-						</Tooltip>
-					</div>
-				{/if}
-			{/if}
 		</div>
-	{/each}
+	{/if}
 </div>
 
 {#if showSetDefault}

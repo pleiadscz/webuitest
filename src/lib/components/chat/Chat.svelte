@@ -1389,9 +1389,8 @@
 						? chatContent.models
 						: [chatContent.models ?? ''];
 
-				if (!($user?.role === 'admin' || ($user?.permissions?.chat?.multiple_models ?? true))) {
-					selectedModels = selectedModels.length > 0 ? [selectedModels[0]] : [''];
-				}
+						// Multi-model disabled: always enforce single model
+				selectedModels = selectedModels.length > 0 ? [selectedModels[0]] : [''];
 
 				oldSelectedModelIds = structuredClone(selectedModels);
 
