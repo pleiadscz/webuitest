@@ -8,6 +8,7 @@
 	import { createPicker } from '$lib/utils/google-drive-picker';
 
 	import Dropdown from '$lib/components/common/Dropdown.svelte';
+	import Drawer from '$lib/components/common/Drawer.svelte';
 	import Tooltip from '$lib/components/common/Tooltip.svelte';
 	import DocumentArrowUp from '$lib/components/icons/DocumentArrowUp.svelte';
 	import Camera from '$lib/components/icons/Camera.svelte';
@@ -108,6 +109,42 @@
 	style="display: none;"
 />
 
+<!-- Mobile bottom sheet -->
+{#if $mobile}
+	<button
+		type="button"
+		on:click={() => { show = true; }}
+		class="contents"
+	>
+		<slot />
+	</button>
+	<Drawer
+		bind:show
+		onClose={onClose}
+	>
+		<div class="px-4 pb-10 pt-4">
+			<div class="mx-auto mb-5 h-1 w-10 rounded-full bg-neutral-300 dark:bg-neutral-600" />
+			<div class="grid grid-cols-3 gap-3">
+				<button
+					type="button"
+					class="flex flex-col items-center justify-center gap-2 rounded-2xl bg-neutral-100 dark:bg-neutral-800 py-5 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
+					on:click={() => { if (fileUploadEnabled) { uploadFilesHandler(); show = false; } }}
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9 7a5 5 0 0 1 10 0v8a7 7 0 1 1-14 0V9a1 1 0 0 1 2 0v6a5 5 0 0 0 10 0V7a3 3 0 1 0-6 0v8a1 1 0 1 0 2 0V9a1 1 0 1 1 2 0v6a3 3 0 1 1-6 0V7Z" clip-rule="evenodd"/></svg>
+					<span class="text-xs font-medium">{$i18n.t('Files')}</span>
+				</button>
+				<button
+					type="button"
+					class="flex flex-col items-center justify-center gap-2 rounded-2xl bg-neutral-100 dark:bg-neutral-800 py-5 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
+					on:click={() => { const el = document.getElementById('camera-input'); el?.click(); show = false; }}
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4C10.8908 4 9.92091 4.60141 9.40069 5.50073C9.22194 5.80972 8.89205 6 8.53508 6H7.8C6.94342 6 6.36113 6.00078 5.91104 6.03755C5.47262 6.07337 5.24842 6.1383 5.09202 6.21799C4.7157 6.40973 4.40973 6.71569 4.21799 7.09202C4.1383 7.24842 4.07337 7.47262 4.03755 7.91104C4.00078 8.36113 4 8.94342 4 9.8V15.2C4 16.0566 4.00078 16.6389 4.03755 17.089C4.07337 17.5274 4.1383 17.7516 4.21799 17.908C4.40973 18.2843 4.7157 18.5903 5.09202 18.782C5.24842 18.8617 5.47262 18.9266 5.91104 18.9624C6.36113 18.9992 6.94342 19 7.8 19H16.2C17.0566 19 17.6389 18.9992 18.089 18.9624C18.5274 18.9266 18.7516 18.8617 18.908 18.782C19.2843 18.5903 19.5903 18.2843 19.782 17.908C19.8617 17.7516 19.9266 17.5274 19.9624 17.089C19.9992 16.6389 20 16.0566 20 15.2V9.8C20 8.94342 19.9992 8.36113 19.9624 7.91104C19.9266 7.47262 19.8617 7.24842 19.782 7.09202C19.5903 6.71569 19.2843 6.40973 18.908 6.21799C18.7516 6.1383 18.5274 6.07337 18.089 6.03755C17.6389 6.00078 17.0566 6 16.2 6H15.4648C15.1079 6 14.778 5.80972 14.5992 5.50073C14.079 4.60141 13.1091 4 12 4Z"/></svg>
+					<span class="text-xs font-medium">{$i18n.t('Camera')}</span>
+				</button>
+			</div>
+		</div>
+	</Drawer>
+{:else}
 <Dropdown
 	bind:show
 	on:change={(e) => {
@@ -610,3 +647,5 @@
 		</div>
 	</div>
 </Dropdown>
+{/if}
+
